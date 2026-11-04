@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePosyanduStore } from '@/lib/store/usePosyanduStore';
 import { Child } from '@/types';
+import { formatBirthOrder } from '@/lib/utils';
 import {
   PlusCircle,
   RefreshCw,
@@ -65,8 +66,8 @@ export default function Header() {
                 {activeChild ? (activeChild.nickname ? activeChild.nickname[0].toUpperCase() : 'A') : 'A'}
               </div>
               <div className="text-left">
-                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider leading-none">
-                  Profil Anak
+                <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider leading-none">
+                  {activeChild ? formatBirthOrder(activeChild.birthOrder).label : 'Profil Anak'}
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <p className="text-sm font-bold text-slate-900 leading-tight">
@@ -75,6 +76,11 @@ export default function Header() {
                   <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold">
                     {activeChild?.gender === 'P' ? '♀ Putri' : '♂ Putra'}
                   </span>
+                  {activeChild && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-900 font-extrabold">
+                      {formatBirthOrder(activeChild.birthOrder).short}
+                    </span>
+                  )}
                 </div>
               </div>
               <ChevronDown className="w-4 h-4 text-slate-400 ml-1" />
@@ -117,9 +123,14 @@ export default function Header() {
                             {c.nickname ? c.nickname[0].toUpperCase() : 'A'}
                           </span>
                           <div className="truncate">
-                            <p className="text-xs font-bold text-slate-900 truncate">{c.name}</p>
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-xs font-bold text-slate-900 truncate">{c.name}</p>
+                              <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded-md bg-amber-50 text-amber-800 border border-amber-200/80 flex-shrink-0">
+                                {formatBirthOrder(c.birthOrder).label}
+                              </span>
+                            </div>
                             <p className="text-[10px] text-slate-500">
-                              {c.gender === 'P' ? 'Perempuan' : 'Laki-laki'} • {c.birthDate}
+                              {c.gender === 'P' ? 'Perempuan' : 'Laki-laki'} • Lahir {c.birthDate}
                             </p>
                           </div>
                         </button>

@@ -16,6 +16,7 @@ export default function AddChildModal({ isOpen, onClose }: AddChildModalProps) {
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
   const [nik, setNik] = useState('');
+  const [birthOrder, setBirthOrder] = useState<number>(1);
   const [gender, setGender] = useState<Gender>('P');
   const [birthDate, setBirthDate] = useState('2024-01-27');
   const [birthWeight, setBirthWeight] = useState('3.2');
@@ -43,6 +44,7 @@ export default function AddChildModal({ isOpen, onClose }: AddChildModalProps) {
       nickname: nickname || name.split(' ')[0],
       nik,
       gender,
+      birthOrder: Number(birthOrder) || 1,
       birthDate,
       birthWeight: parseFloat(birthWeight) || 3.0,
       birthHeight: parseFloat(birthHeight) || 50.0,
@@ -100,15 +102,15 @@ export default function AddChildModal({ isOpen, onClose }: AddChildModalProps) {
             </div>
           </div>
 
-          {/* Gender & NIK */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Gender, Urutan Kelahiran & NIK */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">Jenis Kelamin *</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setGender('P')}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
+                  className={`py-2 px-2.5 rounded-xl text-xs font-bold border transition-colors ${
                     gender === 'P'
                       ? 'bg-rose-50 text-rose-700 border-rose-300 ring-2 ring-rose-400'
                       : 'bg-white text-slate-600 border-slate-200'
@@ -119,7 +121,7 @@ export default function AddChildModal({ isOpen, onClose }: AddChildModalProps) {
                 <button
                   type="button"
                   onClick={() => setGender('L')}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
+                  className={`py-2 px-2.5 rounded-xl text-xs font-bold border transition-colors ${
                     gender === 'L'
                       ? 'bg-blue-50 text-blue-700 border-blue-300 ring-2 ring-blue-400'
                       : 'bg-white text-slate-600 border-slate-200'
@@ -129,6 +131,23 @@ export default function AddChildModal({ isOpen, onClose }: AddChildModalProps) {
                 </button>
               </div>
             </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Urutan Kelahiran *</label>
+              <select
+                value={birthOrder}
+                onChange={(e) => setBirthOrder(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
+              >
+                <option value={1}>Anak Pertama (ke-1)</option>
+                <option value={2}>Anak Kedua (ke-2)</option>
+                <option value={3}>Anak Ketiga (ke-3)</option>
+                <option value={4}>Anak Keempat (ke-4)</option>
+                <option value={5}>Anak Kelima (ke-5)</option>
+                <option value={6}>Anak Keenam (ke-6)</option>
+              </select>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">NIK Anak (16 Digit)</label>
               <input

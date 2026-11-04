@@ -23,6 +23,7 @@ export const posyanduService = {
         nickname: row.nickname || row.name,
         nik: row.nik || '',
         gender: row.gender,
+        birthOrder: row.birth_order ? Number(row.birth_order) : undefined,
         birthDate: row.birth_date,
         birthWeight: Number(row.birth_weight),
         birthHeight: Number(row.birth_height),
@@ -47,7 +48,7 @@ export const posyanduService = {
     if (!isSupabaseConfigured()) return false;
     try {
       const supabase = createClient();
-      const { error } = await supabase.from('children').upsert({
+      const payload: Record<string, any> = {
         id: child.id,
         name: child.name,
         nickname: child.nickname,
@@ -65,7 +66,19 @@ export const posyanduService = {
         address: child.address,
         kia_book_no: child.kiaBookNo,
         updated_at: new Date().toISOString(),
-      });
+      };
+
+      if (child.birthOrder) {
+        payload.birth_order = child.birthOrder;
+      }
+
+      let { error } = await supabase.from('children').upsert(payload);
+      if (error && error.code === 'PGRST204') {
+        // Kolom birth_order belum ada di tabel Supabase pengguna, simpan tanpa field tersebut
+        delete payload.birth_order;
+        const retry = await supabase.from('children').upsert(payload);
+        error = retry.error;
+      }
 
       if (error) {
         console.error('Error saving child to Supabase:', error);

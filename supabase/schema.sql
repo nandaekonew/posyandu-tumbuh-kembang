@@ -17,6 +17,7 @@ CREATE TABLE children (
     nickname VARCHAR(50),
     nik VARCHAR(20),
     gender VARCHAR(1) NOT NULL CHECK (gender IN ('L', 'P')),
+    birth_order INTEGER DEFAULT 1,                   -- Urutan anak (1 = Pertama, 2 = Kedua, dst.)
     birth_date DATE NOT NULL,
     birth_weight DECIMAL(4,2) NOT NULL DEFAULT 3.00, -- dalam kg
     birth_height DECIMAL(4,1) NOT NULL DEFAULT 50.0, -- dalam cm

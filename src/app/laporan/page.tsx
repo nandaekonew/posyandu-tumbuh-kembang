@@ -4,6 +4,7 @@ import React from 'react';
 import { usePosyanduStore } from '@/lib/store/usePosyanduStore';
 import { Printer, Download, Baby, Calendar, Scale, Ruler, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { BBU_CONFIG, TBU_CONFIG, BBTB_CONFIG } from '@/lib/whoGrowthStandards';
+import { formatBirthOrder } from '@/lib/utils';
 
 export default function LaporanPage() {
   const { getActiveChild, getActiveVisits, getActiveImmunizations } = usePosyanduStore();
@@ -127,6 +128,12 @@ export default function LaporanPage() {
             <span className="font-extrabold text-slate-900 text-sm">{child.name}</span>
           </div>
           <div>
+            <span className="text-slate-400 font-semibold block text-[10px] uppercase">Urutan Anak</span>
+            <span className="font-black text-emerald-800 text-xs block">
+              {formatBirthOrder(child.birthOrder).label} (Ke-{child.birthOrder || 1})
+            </span>
+          </div>
+          <div>
             <span className="text-slate-400 font-semibold block text-[10px] uppercase">Jenis Kelamin / Gol. Darah</span>
             <span className="font-bold text-slate-800">
               {child.gender === 'P' ? 'Perempuan (♀)' : 'Laki-Laki (♂)'} / Gol. {child.bloodType || 'O'}
@@ -150,7 +157,11 @@ export default function LaporanPage() {
             <span className="text-slate-400 font-semibold block text-[10px] uppercase">Nama Ibu</span>
             <span className="font-bold text-slate-800">{child.motherName || '-'}</span>
           </div>
-          <div className="col-span-2">
+          <div>
+            <span className="text-slate-400 font-semibold block text-[10px] uppercase">No. Buku KIA</span>
+            <span className="font-mono text-slate-800 font-bold">{child.kiaBookNo || '-'}</span>
+          </div>
+          <div className="col-span-2 sm:col-span-4">
             <span className="text-slate-400 font-semibold block text-[10px] uppercase">Alamat Domisili</span>
             <span className="font-medium text-slate-800">{child.address || '-'}</span>
           </div>

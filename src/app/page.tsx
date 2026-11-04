@@ -9,6 +9,7 @@ import RecentVisitsWidget from '@/components/dashboard/RecentVisitsWidget';
 import AddVisitModal from '@/components/forms/AddVisitModal';
 import EditChildModal from '@/components/forms/EditChildModal';
 import { calculateDetailedAge } from '@/lib/whoGrowthStandards';
+import { formatBirthOrder } from '@/lib/utils';
 import {
   Baby,
   Calendar,
@@ -53,9 +54,12 @@ export default function DashboardOverviewPage() {
             {activeChild.nickname ? activeChild.nickname[0].toUpperCase() : 'D'}
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-emerald-100">
                 {activeChild.gender === 'P' ? '♀ Anak Perempuan' : '♂ Anak Laki-Laki'}
+              </span>
+              <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-amber-950 shadow-sm flex items-center gap-1">
+                ⭐ {formatBirthOrder(activeChild.birthOrder).label}
               </span>
               <span className="text-xs text-emerald-200">
                 Lahir: {activeChild.birthDate}

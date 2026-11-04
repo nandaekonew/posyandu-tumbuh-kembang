@@ -2,9 +2,9 @@
 -- DATA AWAL (SEED) POSYANDU TUMBUH KEMBANG ANAK
 -- ==========================================================
 
--- 1. Input Profil Balita 1: Nabila Azzahra Widianto
+-- 1. Input Profil Balita 1: Nabila Azzahra Widianto (Anak Pertama) & Balita 2: Delisa Zafira Widianto (Anak Kedua)
 INSERT INTO children (
-    id, name, nickname, nik, gender, birth_date,
+    id, name, nickname, nik, gender, birth_order, birth_date,
     birth_weight, birth_height, birth_head_circ, blood_type,
     father_name, mother_name, posyandu_name, village, address, kia_book_no
 ) VALUES (
@@ -13,6 +13,7 @@ INSERT INTO children (
     'Nabila',
     '3578016604240004',
     'P',
+    1, -- Anak Pertama
     '2024-04-26',
     3.15,
     48.5,
@@ -32,6 +33,7 @@ INSERT INTO children (
     'Delisa',
     '3578014801260004',
     'P',
+    2, -- Anak Kedua
     '2026-01-08',
     3.20,
     49.0,

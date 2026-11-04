@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { usePosyanduStore } from '@/lib/store/usePosyanduStore';
 import { Child } from '@/types';
 import { calculateDetailedAge } from '@/lib/whoGrowthStandards';
+import { formatBirthOrder } from '@/lib/utils';
 import {
   Users,
   PlusCircle,
@@ -83,9 +84,12 @@ export default function KelolaAnakPage() {
                     {child.nickname ? child.nickname[0].toUpperCase() : 'A'}
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
                         {child.gender === 'P' ? '♀ Perempuan' : '♂ Laki-laki'}
+                      </span>
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
+                        {formatBirthOrder(child.birthOrder).label}
                       </span>
                       {isActive && (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white flex items-center gap-1">
@@ -114,7 +118,11 @@ export default function KelolaAnakPage() {
               </div>
 
               {/* Data Detail Anak */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Urutan Anak</span>
+                  <span className="font-bold text-amber-900">{formatBirthOrder(child.birthOrder).label}</span>
+                </div>
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase font-bold block">Tgl Lahir</span>
                   <span className="font-semibold text-slate-800">{child.birthDate}</span>
@@ -137,7 +145,7 @@ export default function KelolaAnakPage() {
                   <span className="text-[10px] text-slate-400 uppercase font-bold block">Nama Ibu</span>
                   <span className="font-semibold text-slate-800">{child.motherName || '-'}</span>
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <span className="text-[10px] text-slate-400 uppercase font-bold block">No. Buku KIA</span>
                   <span className="font-mono text-slate-700 text-[11px]">{child.kiaBookNo || '-'}</span>
                 </div>

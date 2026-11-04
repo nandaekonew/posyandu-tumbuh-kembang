@@ -18,6 +18,7 @@ import {
   Edit,
 } from 'lucide-react';
 import { usePosyanduStore } from '@/lib/store/usePosyanduStore';
+import { formatBirthOrder } from '@/lib/utils';
 import AddChildModal from '../forms/AddChildModal';
 import EditChildModal from '../forms/EditChildModal';
 
@@ -66,7 +67,11 @@ export default function Sidebar() {
                 {activeChild.nickname ? activeChild.nickname[0].toUpperCase() : 'A'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] text-slate-400 font-semibold uppercase">Anak Aktif</p>
+                <div className="flex items-center gap-1">
+                  <p className="text-[10px] text-emerald-700 font-extrabold uppercase tracking-wider">
+                    {formatBirthOrder(activeChild.birthOrder).label}
+                  </p>
+                </div>
                 <p className="text-sm font-bold text-slate-800 truncate">{activeChild.nickname || activeChild.name}</p>
               </div>
               <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white text-emerald-700 font-bold border border-emerald-200">

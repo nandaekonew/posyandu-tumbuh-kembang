@@ -3,7 +3,7 @@ import { Child, PosyanduVisit, ChildImmunization } from '@/types';
 import { posyanduService } from '../supabase/posyanduService';
 import { isSupabaseConfigured } from '../supabase/client';
 
-// Data Awal Standar Default: Delisa Zafira Widianto
+// Data Awal Standar Default: Nabila & Delisa
 export const DEFAULT_CHILDREN: Child[] = [
   {
     id: 'child-nabila-001',
@@ -11,6 +11,7 @@ export const DEFAULT_CHILDREN: Child[] = [
     nickname: 'Nabila',
     nik: '3578016604240004',
     gender: 'P',
+    birthOrder: 1, // Anak Pertama
     birthDate: '2024-04-26',
     birthWeight: 3.15,
     birthHeight: 48.5,
@@ -31,6 +32,7 @@ export const DEFAULT_CHILDREN: Child[] = [
     nickname: 'Delisa',
     nik: '3578014801260004',
     gender: 'P',
+    birthOrder: 2, // Anak Kedua
     birthDate: '2026-01-08',
     birthWeight: 3.2,
     birthHeight: 49.0,
@@ -354,6 +356,18 @@ export const DEFAULT_IMMUNIZATIONS: ChildImmunization[] = [
   { id: 'imun-020', childId: 'child-nabila-001', vaccineCode: 'mr_boost', vaccineName: 'Campak-Rubella 2 (Booster)', targetAgeMonths: 18, isGiven: true, givenDate: '2025-10-26', batchNo: 'MR251020', location: 'Posyandu Warugunung', notes: 'Usia 18 bulan' },
 ];
 
+// Helper untuk memastikan setiap anak memiliki nomor urutan kelahiran (Anak ke-1, 2, dst.)
+export function ensureBirthOrders(list: Child[]): Child[] {
+  const sorted = [...list].sort(
+    (a, b) => new Date(a.birthDate).getTime() - new Date(b.birthDate).getTime()
+  );
+  return list.map((c) => {
+    if (c.birthOrder && c.birthOrder > 0) return c;
+    const order = sorted.findIndex((s) => s.id === c.id) + 1;
+    return { ...c, birthOrder: order > 0 ? order : 1 };
+  });
+}
+
 const LOCAL_STORAGE_KEY = 'posyandu_kembang_anak_v1';
 
 interface PosyanduStoreState {
@@ -417,7 +431,7 @@ export const usePosyanduStore = create<PosyanduStoreState>((set, get) => ({
     }
 
     set({
-      children: localChildren,
+      children: ensureBirthOrders(localChildren),
       visits: localVisits,
       immunizations: localImmunizations,
       activeChildId: localActiveId,
@@ -428,8 +442,9 @@ export const usePosyanduStore = create<PosyanduStoreState>((set, get) => ({
     // 2. Jika Supabase dikonfigurasi, coba sync data dari cloud
     if (isSupabaseConfigured()) {
       try {
-        const cloudChildren = await posyanduService.getChildren();
-        if (cloudChildren && cloudChildren.length > 0) {
+        const rawCloudChildren = await posyanduService.getChildren();
+        if (rawCloudChildren && rawCloudChildren.length > 0) {
+          const cloudChildren = ensureBirthOrders(rawCloudChildren);
           const activeChild = cloudChildren[0];
           const [cloudVisits, cloudImmunizations] = await Promise.all([
             posyanduService.getVisits(activeChild.id),
@@ -467,13 +482,15 @@ export const usePosyanduStore = create<PosyanduStoreState>((set, get) => ({
   },
 
   addChild: async (childData) => {
+    const existing = get().children;
     const newChild: Child = {
       ...childData,
       id: `child-${Date.now()}`,
+      birthOrder: childData.birthOrder || existing.length + 1,
       createdAt: new Date().toISOString(),
     };
 
-    const updatedChildren = [...get().children, newChild];
+    const updatedChildren = ensureBirthOrders([...existing, newChild]);
     set({ children: updatedChildren, activeChildId: newChild.id });
 
     if (typeof window !== 'undefined') {
@@ -497,7 +514,7 @@ export const usePosyanduStore = create<PosyanduStoreState>((set, get) => ({
   },
 
   updateChild: async (child) => {
-    const updated = get().children.map((c) => (c.id === child.id ? child : c));
+    const updated = ensureBirthOrders(get().children.map((c) => (c.id === child.id ? child : c)));
     set({ children: updated });
 
     if (typeof window !== 'undefined') {

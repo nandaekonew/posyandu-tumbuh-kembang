@@ -13,6 +13,7 @@ export interface Child {
   nickname: string;
   nik: string;
   gender: Gender;
+  birthOrder?: number; // Urutan anak: 1 = Pertama, 2 = Kedua, dst.
   birthDate: string; // YYYY-MM-DD
   birthWeight: number; // kg
   birthHeight: number; // cm
