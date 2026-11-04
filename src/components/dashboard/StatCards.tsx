@@ -9,13 +9,12 @@ import {
   BBTB_CONFIG,
   KBM_STATUS_CONFIG,
 } from '@/lib/whoGrowthStandards';
-import { Scale, Ruler, Brain, TrendingUp, Calendar, Heart } from 'lucide-react';
+import { Scale, Ruler, Brain, Heart, Activity } from 'lucide-react';
 
 export default function StatCards() {
-  const { getActiveChild, getLatestVisit, getPreviousVisit } = usePosyanduStore();
+  const { getActiveChild, getLatestVisit } = usePosyanduStore();
   const child = getActiveChild();
   const latest = getLatestVisit();
-  const prev = getPreviousVisit();
 
   if (!child) return null;
 
@@ -29,101 +28,133 @@ export default function StatCards() {
   const kbmConfig = latest ? KBM_STATUS_CONFIG[latest.weightGainStatus] : null;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      {/* 1. Berat Badan & KBM */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-all">
-        <div className="flex items-center justify-between mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-            <Scale className="w-5 h-5" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 1. Indikator Utama: Berat Badan (BB) */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <Scale className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-bold text-slate-700">Berat Badan (BB)</span>
+            </div>
+            {kbmConfig && (
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${kbmConfig.badgeClass}`}>
+                {kbmConfig.label}
+              </span>
+            )}
           </div>
-          {kbmConfig && (
-            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${kbmConfig.badgeClass}`}>
-              {kbmConfig.label}
+
+          <div className="flex items-baseline gap-1 mt-1">
+            <span className="text-3xl font-black text-slate-900 tracking-tight">
+              {latest ? latest.weightKg : child.birthWeight}
             </span>
-          )}
+            <span className="text-xs font-semibold text-slate-500">kg</span>
+          </div>
         </div>
-        <p className="text-xs font-semibold text-slate-500">Berat Badan (BB)</p>
-        <div className="flex items-baseline gap-1 mt-0.5">
-          <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            {latest ? latest.weightKg : child.birthWeight}
-          </span>
-          <span className="text-xs font-bold text-slate-500">kg</span>
-        </div>
-        <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-          <span className="text-slate-400">Status BB/U:</span>
+
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span className="text-slate-500 text-[11px]">Status BB/U:</span>
           <span className={`font-semibold px-2 py-0.5 rounded-md text-[10px] ${bbuConfig?.badgeClass || 'bg-slate-100 text-slate-700'}`}>
             {bbuConfig?.label || 'Normal'}
           </span>
         </div>
       </div>
 
-      {/* 2. Tinggi/Panjang Badan & Status Stunting */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-teal-300 transition-all">
-        <div className="flex items-center justify-between mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
-            <Ruler className="w-5 h-5" />
+      {/* 2. Indikator Utama: Tinggi / Panjang Badan (TB) & Status Stunting */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
+                <Ruler className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-bold text-slate-700">Panjang / Tinggi (TB)</span>
+            </div>
+            <span
+              className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                tbuConfig?.isStunted
+                  ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                  : 'bg-teal-50 text-teal-800 border border-teal-200'
+              }`}
+            >
+              {tbuConfig?.isStunted ? 'Waspada Stunting' : 'Tinggi Normal'}
+            </span>
           </div>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${tbuConfig?.isStunted ? 'bg-rose-500 text-white' : 'bg-teal-100 text-teal-800'}`}>
-            {tbuConfig?.isStunted ? '⚠️ Waspada Stunting' : 'Bebas Stunting'}
-          </span>
+
+          <div className="flex items-baseline gap-1 mt-1">
+            <span className="text-3xl font-black text-slate-900 tracking-tight">
+              {latest ? latest.heightCm : child.birthHeight}
+            </span>
+            <span className="text-xs font-semibold text-slate-500">cm</span>
+          </div>
         </div>
-        <p className="text-xs font-semibold text-slate-500">Tinggi / Panjang (TB)</p>
-        <div className="flex items-baseline gap-1 mt-0.5">
-          <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            {latest ? latest.heightCm : child.birthHeight}
-          </span>
-          <span className="text-xs font-bold text-slate-500">cm</span>
-        </div>
-        <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-          <span className="text-slate-400">Status TB/U:</span>
-          <span className="font-semibold text-slate-800 text-[11px] truncate max-w-[120px]">
+
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span className="text-slate-500 text-[11px]">Status TB/U:</span>
+          <span className="font-semibold text-slate-800 text-[11px] truncate max-w-[130px]">
             {tbuConfig?.label || 'Normal'}
           </span>
         </div>
       </div>
 
-      {/* 3. Status Gizi (BB/TB) & LiLA */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-blue-300 transition-all">
-        <div className="flex items-center justify-between mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-            <Heart className="w-5 h-5" />
+      {/* 3. Indikator Pendukung: Status Gizi (BB/TB) & LiLA */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+                <Heart className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-bold text-slate-700">Status Gizi (BB/TB)</span>
+            </div>
+            <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+              LiLA: {latest?.armCircCm ? `${latest.armCircCm} cm` : '-'}
+            </span>
           </div>
-          <span className="text-[10px] font-semibold text-slate-500">LiLA: {latest?.armCircCm ? `${latest.armCircCm} cm` : '-'}</span>
+
+          <div className="mt-1">
+            <span className="text-2xl font-black text-slate-900 block truncate">
+              {bbtbConfig?.label || 'Gizi Baik'}
+            </span>
+          </div>
         </div>
-        <p className="text-xs font-semibold text-slate-500">Status Gizi (BB/TB)</p>
-        <div className="mt-1">
-          <span className="text-lg sm:text-xl font-bold text-slate-900 block truncate">
-            {bbtbConfig?.label || 'Gizi Baik'}
-          </span>
-        </div>
-        <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-          <span className="text-slate-400">Kenaikan Bln Lalu:</span>
-          <span className="font-bold text-emerald-600">
-            {latest?.weightGainGram && latest.weightGainGram > 0 ? `+${latest.weightGainGram}g` : 'Data Awal'}
+
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span className="text-slate-500 text-[11px]">Kenaikan Bulan Lalu:</span>
+          <span className="font-bold text-emerald-700 text-xs">
+            {latest?.weightGainGram && latest.weightGainGram > 0 ? `+${latest.weightGainGram} g` : 'Data Registrasi'}
           </span>
         </div>
       </div>
 
-      {/* 4. Lingkar Kepala & Usia Terkini */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-indigo-300 transition-all">
-        <div className="flex items-center justify-between mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-            <Brain className="w-5 h-5" />
+      {/* 4. Indikator Pendukung: Lingkar Kepala & Usia Kronologis */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold">
+                <Brain className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-bold text-slate-700">Lingkar Kepala (LK)</span>
+            </div>
+            <span className="text-[10px] font-bold text-indigo-800 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100">
+              {currentAge}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
-            {currentAge}
-          </span>
+
+          <div className="flex items-baseline gap-1 mt-1">
+            <span className="text-3xl font-black text-slate-900 tracking-tight">
+              {latest?.headCircCm || child.birthHeadCirc || 34.0}
+            </span>
+            <span className="text-xs font-semibold text-slate-500">cm</span>
+          </div>
         </div>
-        <p className="text-xs font-semibold text-slate-500">Lingkar Kepala (LK)</p>
-        <div className="flex items-baseline gap-1 mt-0.5">
-          <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            {latest?.headCircCm || child.birthHeadCirc || 34.0}
-          </span>
-          <span className="text-xs font-bold text-slate-500">cm</span>
-        </div>
-        <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-          <span className="text-slate-400">Pertumbuhan Otak:</span>
-          <span className="font-semibold text-emerald-700 text-[11px]">Optimal (Normal)</span>
+
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span className="text-slate-500 text-[11px]">Perkembangan Motorik:</span>
+          <span className="font-semibold text-emerald-700 text-[11px]">Sesuai Umur (KPSP)</span>
         </div>
       </div>
     </div>
