@@ -67,65 +67,71 @@ export default function KMSChart({ visits, gender, childName }: KMSChartProps) {
   }
 
   return (
-    <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm space-y-4">
+    <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-2xs space-y-4">
       {/* Metric Switcher Tabs */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h3 className="font-extrabold text-slate-900 text-base sm:text-lg flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            {metric === 'weight' && 'Grafik KMS (Berat Badan menurut Umur - BB/U)'}
-            {metric === 'height' && 'Grafik Deteksi Stunting (Panjang/Tinggi Badan - TB/U)'}
-            {metric === 'head' && 'Grafik Lingkar Kepala menurut Umur (LK/U)'}
+            {metric === 'weight' && 'Grafik KMS (Berat Badan - BB/U)'}
+            {metric === 'height' && 'Grafik Deteksi Stunting (Panjang/TB - TB/U)'}
+            {metric === 'head' && 'Grafik Lingkar Kepala (LK/U)'}
           </h3>
-          <p className="text-xs text-slate-500">
-            Standar Pertumbuhan WHO & Kemenkes RI untuk balita {gender === 'P' ? 'Perempuan ♀' : 'Laki-laki ♂'}
+          <p className="text-xs text-slate-500 mt-0.5">
+            Standar Pertumbuhan WHO & Kemenkes RI ({gender === 'P' ? 'Perempuan ♀' : 'Laki-laki ♂'})
           </p>
         </div>
 
-        <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold">
+        <div className="flex w-full sm:w-auto bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold gap-1">
           <button
             onClick={() => setMetric('weight')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg transition-all min-h-[40px] ${
               metric === 'weight'
-                ? 'bg-white text-emerald-800 shadow-sm font-extrabold'
+                ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
+            aria-label="Tampilkan grafik KMS Berat Badan"
           >
-            <Scale className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Berat Badan (KMS)</span>
+            <Scale className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Berat Badan (KMS)</span>
+            <span className="sm:hidden">BB (KMS)</span>
           </button>
           <button
             onClick={() => setMetric('height')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg transition-all min-h-[40px] ${
               metric === 'height'
-                ? 'bg-white text-emerald-800 shadow-sm font-extrabold'
+                ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
+            aria-label="Tampilkan grafik deteksi stunting tinggi badan"
           >
-            <Ruler className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Tinggi (Stunting)</span>
+            <Ruler className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Tinggi (Stunting)</span>
+            <span className="sm:hidden">TB (Stunting)</span>
           </button>
           <button
             onClick={() => setMetric('head')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg transition-all min-h-[40px] ${
               metric === 'head'
-                ? 'bg-white text-emerald-800 shadow-sm font-extrabold'
+                ? 'bg-white text-emerald-800 shadow-2xs font-extrabold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
+            aria-label="Tampilkan grafik lingkar kepala"
           >
-            <Brain className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Lingkar Kepala</span>
+            <Brain className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Lingkar Kepala</span>
+            <span className="sm:hidden">LK (Kepala)</span>
           </button>
         </div>
       </div>
 
       {/* Chart Canvas */}
-      <div className="w-full h-80 sm:h-96 pt-2">
+      <div className="w-full h-72 sm:h-96 pt-2">
         <ResponsiveContainer width="100%" height="100%">
           {metric === 'weight' ? (
             <ComposedChart data={chartData} margin={{ top: 10, right: 10, bottom: 20, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#64748b' }} tickLine={false} interval="preserveStartEnd" />
               <YAxis
                 unit=" kg"
                 domain={[2, 14]}

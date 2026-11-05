@@ -54,46 +54,42 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-xs">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-3 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between shadow-2xs">
         {/* Child Selector & Info */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsChildDropdownOpen(!isChildDropdownOpen)}
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl border border-slate-200 hover:border-emerald-500 bg-slate-50/80 hover:bg-emerald-50/50 transition-all text-left shadow-2xs"
+              className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 hover:border-emerald-600 bg-slate-50/80 hover:bg-emerald-50/50 transition-all text-left shadow-2xs max-w-[210px] sm:max-w-none"
+              aria-label="Pilih atau ubah data profil balita"
             >
-              <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-700 text-white font-black flex items-center justify-center text-xs shadow-2xs flex-shrink-0">
                 {activeChild ? (activeChild.nickname ? activeChild.nickname[0].toUpperCase() : 'A') : 'A'}
               </div>
-              <div className="text-left">
-                <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider leading-none">
+              <div className="text-left min-w-0 truncate">
+                <p className="text-[9px] sm:text-[10px] text-emerald-800 font-bold uppercase tracking-wider leading-none truncate">
                   {activeChild ? formatBirthOrder(activeChild.birthOrder).label : 'Profil Anak'}
                 </p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <p className="text-sm font-bold text-slate-900 leading-tight">
+                <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5">
+                  <p className="text-xs sm:text-sm font-bold text-slate-900 leading-tight truncate">
                     {activeChild ? activeChild.nickname || activeChild.name : 'Pilih Anak'}
                   </p>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-bold">
-                    {activeChild?.gender === 'P' ? '♀ Putri' : '♂ Putra'}
+                  <span className="text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 font-bold flex-shrink-0">
+                    {activeChild?.gender === 'P' ? '♀ P' : '♂ L'}
                   </span>
-                  {activeChild && (
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-900 font-extrabold">
-                      {formatBirthOrder(activeChild.birthOrder).short}
-                    </span>
-                  )}
                 </div>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-400 ml-1" />
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5 flex-shrink-0" aria-hidden="true" />
             </button>
 
-            {/* Dropdown Menu (Tidak tertutupi karena Header berada di kolom kanan dan z-index tinggi) */}
+            {/* Dropdown Menu (Responsif untuk layar HP maupun desktop) */}
             {isChildDropdownOpen && (
-              <div className="absolute left-0 mt-2 w-72 sm:w-80 bg-white rounded-3xl shadow-2xl border border-slate-200/90 py-2.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute left-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-w-sm bg-white rounded-2xl shadow-xl border border-slate-200 py-2.5 z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
                   <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
                     Daftar Balita ({children.length})
                   </span>
-                  <span className="text-[10px] text-emerald-600 font-bold">Pilih / Edit Profil</span>
+                  <span className="text-[10px] text-emerald-700 font-bold">Pilih / Edit Profil</span>
                 </div>
 
                 {/* List Anak */}
@@ -198,27 +194,30 @@ export default function Header() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
           {/* Cloud Sync Button */}
           {isCloudConnected && (
             <button
               onClick={() => syncWithCloud()}
               disabled={isSyncing}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-2xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/60 text-emerald-800 transition-colors"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-semibold rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100 text-emerald-800 transition-colors"
               title="Sinkronkan dengan Database Supabase"
+              aria-label="Sinkronkan data dengan database Supabase"
             >
-              <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">{isSyncing ? 'Sinkronisasi...' : 'Supabase Sync'}</span>
+              <RefreshCw className={`w-3.5 h-3.5 text-emerald-700 ${isSyncing ? 'animate-spin' : ''}`} aria-hidden="true" />
+              <span className="hidden sm:inline">{isSyncing ? 'Sinkronisasi...' : 'Sync Cloud'}</span>
             </button>
           )}
 
           {/* Primary Action Button */}
           <button
             onClick={() => setIsAddVisitModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-200 hover:from-emerald-700 hover:to-teal-700 active:scale-95 transition-all"
+            className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-2xs active:scale-95 transition-all"
+            aria-label="Catat kunjungan posyandu baru"
           >
-            <PlusCircle className="w-4 h-4" />
-            <span>Catat Posyandu</span>
+            <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" aria-hidden="true" />
+            <span className="hidden sm:inline">Catat Posyandu</span>
+            <span className="sm:hidden font-extrabold">+ Catat</span>
           </button>
         </div>
       </header>
